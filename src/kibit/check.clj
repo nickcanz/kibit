@@ -222,6 +222,8 @@ into the namespace."
   (when (resolve '*default-data-reader-fn*)
     {(resolve '*default-data-reader-fn*) (fn [tag val] val)}))
 
+(def exit-code (atom 0))
+
 (defn check-file
   ""
   [source-file & kw-opts]
@@ -236,5 +238,5 @@ into the namespace."
                                            :guard guard
                                            :resolution resolution
                                            :init-ns init-ns)]
-          (reporter (assoc simplify-map :file source-file)))))))
-
+          (reporter (assoc simplify-map :file source-file))
+          (reset! exit-code 1))))))

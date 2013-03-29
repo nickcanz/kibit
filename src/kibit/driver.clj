@@ -9,6 +9,7 @@
                  "The reporter used when rendering suggestions"
                  :default "text"]])
 
+
 (defn run [project & args]
   (let [[options file-args usage-text] (apply (partial cli args) cli-specs)
         source-files (if (empty? file-args)
@@ -16,8 +17,10 @@
                                (or (:source-paths project) [(:source-path project)]))
                        file-args)]
     (doseq [file source-files]
-      (try (check-file file :reporter (name-to-reporter (:reporter options)
-                                                        cli-reporter))
-           (catch Exception e
-             (println "Check failed -- skipping rest of file")
-             (println (.getMessage e)))))))
+      (try
+        (check-file file :reporter (name-to-reporter (:reporter options)
+                                                     cli-reporter))
+        (catch Exception e
+          (println "Check failed -- skipping rest of file")
+          (println (.getMessage e)))))
+    (System/exit @kibit.check/exit-code)))
